@@ -1,5 +1,6 @@
 import numpy as np
 import fuzzywuzzy.fuzz as fuzz
+from thefuzz import fuzz
 from nltk.corpus import stopwords
 from sklearn.metrics.pairwise import cosine_similarity
 import nltk
