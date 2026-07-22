@@ -2,6 +2,8 @@ import numpy as np
 import fuzzywuzzy.fuzz as fuzz
 from nltk.corpus import stopwords
 from sklearn.metrics.pairwise import cosine_similarity
+import nltk
+
 nltk.download('stopwords')
 nltk.download('punkt')
 
