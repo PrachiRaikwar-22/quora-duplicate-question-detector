@@ -2,6 +2,8 @@ import streamlit as st
 import helper
 import pickle
 
+FILE_ID = '1akeBcL3_odzoRlScHmGraHcR1-1IdGrV'
+MODEL_PATH = 'xgb_model.pkl'
 model = pickle.load(open('xgb_model.pkl', 'rb'))
 w2v_model = pickle.load(open('w2v_model.pkl', 'rb'))
 
