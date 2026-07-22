@@ -4,13 +4,6 @@ import gdown
 import streamlit as st
 import helper
 
-# Page Setup
-st.set_page_config(
-    page_title="Duplicate Question Finder",
-    page_icon="🔍",
-    layout="centered"
-)
-
 XGB_FILE_ID = '1akeBcL3_odzoRlScHmGraHcR1-1IdGrV'
 W2V_FILE_ID = '1zsHBpHdzXBxCE6qBnPQF92HhNWeIGCRM'
 
@@ -19,16 +12,23 @@ W2V_PATH = 'w2v_model.pkl'
 
 @st.cache_resource
 def load_models():
+    # 1. Download XGBoost Model if missing or small/invalid
     if not os.path.exists(XGB_PATH) or os.path.getsize(XGB_PATH) < 1000:
-        if os.path.exists(XGB_PATH): os.remove(XGB_PATH)
+        if os.path.exists(XGB_PATH):
+            os.remove(XGB_PATH)  # Delete corrupted file if present
+        st.info("Downloading XGBoost model from Google Drive...")
         url = f'https://drive.google.com/file/d/{XGB_FILE_ID}/view?usp=sharing'
         gdown.download(url, XGB_PATH, quiet=False, fuzzy=True)
     
+    # 2. Download Word2Vec Model if missing or small/invalid
     if not os.path.exists(W2V_PATH) or os.path.getsize(W2V_PATH) < 1000:
-        if os.path.exists(W2V_PATH): os.remove(W2V_PATH)
+        if os.path.exists(W2V_PATH):
+            os.remove(W2V_PATH)  # Delete corrupted file if present
+        st.info("Downloading Word2Vec model from Google Drive...")
         url = f'https://drive.google.com/file/d/{W2V_FILE_ID}/view?usp=sharing'
         gdown.download(url, W2V_PATH, quiet=False, fuzzy=True)
 
+    # 3. Load pickle files
     with open(XGB_PATH, 'rb') as f:
         model = pickle.load(f)
     with open(W2V_PATH, 'rb') as f:
@@ -36,43 +36,23 @@ def load_models():
         
     return model, w2v_model
 
+# Load models
 model, w2v_model = load_models()
 
-# Hero Header
-st.markdown("""
-    <div style="text-align: center; padding: 10px; margin-bottom: 20px;">
-        <h1 style="color: #FF4B4B;">🔍 Quora Duplicate Question Detector</h1>
-        <p style="color: #555; font-size: 1.1em;">
-            Compare two question pairs to check if they share the same semantic meaning.
-        </p>
-    </div>
-""", unsafe_allow_html=True)
+st.title('Duplicate Question Pairs Finder')
 
-# Columns for inputs
-col1, col2 = st.columns(2)
+q1 = st.text_input('Enter Question 1:')
+q2 = st.text_input('Enter Question 2:')
 
-with col1:
-    q1 = st.text_area('Question 1:', placeholder='e.g., How can I learn Python easily?', height=120)
-
-with col2:
-    q2 = st.text_area('Question 2:', placeholder='e.g., What is the best way to start learning Python?', height=120)
-
-st.markdown("<br>", unsafe_allow_html=True)
-
-if st.button('Analyze Questions', use_container_width=True, type="primary"):
-    if not q1.strip() or not q2.strip():
-        st.warning("⚠️ Please enter text in both question fields before analyzing.")
+if st.button('Find'):
+    if q1.strip() == "" or q2.strip() == "":
+        st.warning("Please enter both questions!")
     else:
-        with st.spinner("Extracting NLP features and calculating similarity..."):
-            query = helper.query_point_creator(q1, q2, w2v_model)
-            result = model.predict(query)[0]
-            prob = model.predict_proba(query)[0][1]
-
-        st.markdown("---")
-        st.subheader("Analysis Result")
-        # st.metric(label="Similarity Confidence Score", value=f"{prob * 100:.1f}%")
+        query = helper.query_point_creator(q1, q2, w2v_model)
+        result = model.predict(query)[0]
+        prob = model.predict_proba(query)[0][1]
 
         if result == 1:
-            st.error("### 🔴 Duplicate Pair Detected\nThese questions ask the exact same thing.")
+            st.error('Duplicate Questions!')
         else:
-            st.success("### 🟢 Unique Questions\nThese questions have different meanings or topics.")
+            st.success('Not Duplicate Questions.')
