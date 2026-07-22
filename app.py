@@ -70,7 +70,7 @@ if st.button('Analyze Questions', use_container_width=True, type="primary"):
 
         st.markdown("---")
         st.subheader("Analysis Result")
-        st.metric(label="Similarity Confidence Score", value=f"{prob * 100:.1f}%")
+        # st.metric(label="Similarity Confidence Score", value=f"{prob * 100:.1f}%")
 
         if result == 1:
             st.error("### 🔴 Duplicate Pair Detected\nThese questions ask the exact same thing.")
