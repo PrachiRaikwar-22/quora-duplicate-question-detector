@@ -1,6 +1,10 @@
-fuzzywuzzy==0.18.0
-nltk==3.9.1
-numpy==2.5.1
-scikit_learn==1.9.0
-streamlit==1.60.0
+streamlit
 gdown
+nltk
+numpy
+pandas
+scikit-learn
+xgboost
+gensim
+fuzzywuzzy
+python-Levenshtei
