@@ -2,10 +2,12 @@ import streamlit as st
 import helper
 import pickle
 
-FILE_ID = '1akeBcL3_odzoRlScHmGraHcR1-1IdGrV'
-MODEL_PATH = 'xgb_model.pkl'
-model = pickle.load(open('xgb_model.pkl', 'rb'))
-w2v_model = pickle.load(open('w2v_model.pkl', 'rb'))
+XGB_FILE_ID = '1akeBcL3_odzoRlScHmGraHcR1-1IdGrV'
+# Paste your w2v_model.pkl Google Drive File ID below:
+W2V_FILE_ID = '1zsHBpHdzXBxCE6qBnPQF92HhNWeIGCRM'
+
+XGB_PATH = 'xgb_model.pkl'
+W2V_PATH = 'w2v_model.pkl'
 
 st.title('Duplicate Question Pairs Finder')
 
