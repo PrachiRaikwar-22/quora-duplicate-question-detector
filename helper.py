@@ -3,6 +3,9 @@ import fuzzywuzzy.fuzz as fuzz
 from nltk.corpus import stopwords
 from sklearn.metrics.pairwise import cosine_similarity
 
+FILE_ID = '1LyedO-67tQDTjSLYuYv8aXadnOcWKxWw'
+MODEL_PATH = 'rf_model.pkl'
+
 STOP_WORDS = set(stopwords.words("english"))
 
 def get_average_w2v(sentence, model, vector_size=100):
