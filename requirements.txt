@@ -1,3 +1,4 @@
+Plaintext
 streamlit
 gdown
 nltk
@@ -7,4 +8,3 @@ scikit-learn
 xgboost
 gensim
 fuzzywuzzy
-python-Levenshtei
