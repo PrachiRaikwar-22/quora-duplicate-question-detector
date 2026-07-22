@@ -10,20 +10,25 @@ W2V_FILE_ID = '1zsHBpHdzXBxCE6qBnPQF92HhNWeIGCRM'
 XGB_PATH = 'xgb_model.pkl'
 W2V_PATH = 'w2v_model.pkl'
 
-# Function to download and load models safely
 @st.cache_resource
 def load_models():
-    # Download XGBoost Model if missing
-    if not os.path.exists(XGB_PATH):
+    # 1. Download XGBoost Model if missing or small/invalid
+    if not os.path.exists(XGB_PATH) or os.path.getsize(XGB_PATH) < 1000:
+        if os.path.exists(XGB_PATH):
+            os.remove(XGB_PATH)  # Delete corrupted file if present
         st.info("Downloading XGBoost model from Google Drive...")
-        gdown.download(f'https://drive.google.com/uc?id={XGB_FILE_ID}', XGB_PATH, quiet=False)
+        url = f'https://drive.google.com/file/d/{XGB_FILE_ID}/view?usp=sharing'
+        gdown.download(url, XGB_PATH, quiet=False, fuzzy=True)
     
-    # Download Word2Vec Model if missing
-    if not os.path.exists(W2V_PATH):
+    # 2. Download Word2Vec Model if missing or small/invalid
+    if not os.path.exists(W2V_PATH) or os.path.getsize(W2V_PATH) < 1000:
+        if os.path.exists(W2V_PATH):
+            os.remove(W2V_PATH)  # Delete corrupted file if present
         st.info("Downloading Word2Vec model from Google Drive...")
-        gdown.download(f'https://drive.google.com/uc?id={W2V_FILE_ID}', W2V_PATH, quiet=False)
+        url = f'https://drive.google.com/file/d/{W2V_FILE_ID}/view?usp=sharing'
+        gdown.download(url, W2V_PATH, quiet=False, fuzzy=True)
 
-    # Load the pickle files
+    # 3. Load pickle files
     with open(XGB_PATH, 'rb') as f:
         model = pickle.load(f)
     with open(W2V_PATH, 'rb') as f:
@@ -31,7 +36,7 @@ def load_models():
         
     return model, w2v_model
 
-# Load both models
+# Load models
 model, w2v_model = load_models()
 
 st.title('Duplicate Question Pairs Finder')
