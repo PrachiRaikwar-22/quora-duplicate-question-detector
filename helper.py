@@ -3,6 +3,8 @@ import fuzzywuzzy.fuzz as fuzz
 from nltk.corpus import stopwords
 from sklearn.metrics.pairwise import cosine_similarity
 nltk.download('stopwords')
+nltk.download('punkt')
+
 FILE_ID = '1LyedO-67tQDTjSLYuYv8aXadnOcWKxWw'
 MODEL_PATH = 'rf_model.pkl'
 
